@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tab </title>
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container_top {
+        position: relative;
+        height: 50vh;
+    }
+    
+    .tab_king {
+        width: 100%;
+        height: 50vh;
+        background: pink;
+        position: absolute;
+        z-index: 10;
+    }
+    
+    .tab_king ul {
+        width: 88%;
+        margin: 0 auto;
+        overflow: hidden;
+        position: absolute;
+        bottom: 0;
+    }
+    
+    .tab_king li {
+        display: inline-block;
+        padding-right: 20px;
+    }
+    
+    .tab_king li a:hover,
+    .tab_king li a.change_icon {
+        color: red;
+    }
+    
+    .tab_contents {
+        position: absolute;
+        bottom: 0;
+    }
+    
+    #tab_content1 {
+        display: none;
+        background: #eee;
+        padding: 50px 0;
+    }
+    
+    #tab_content2 {
+        display: none;
+        background: green;
+        padding: 50px 0;
+    }
+    
+    #tab_content3 {
+        display: none;
+        background: blue;
+        padding: 50px 0;
+    }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container_top">
+        <div class="tab_king">
+            <p>Lorem ipsum dolor sit amet.</p>
+            <ul>
+                <li><a href="#tab_content1">Nunc tincidunt</a></li>
+                <li><a href="#tab_content2">Proin dolor</a></li>
+                <li><a href="#tab_content3">Aenean lacinia</a></li>
+            </ul>
+        </div>
+        <div class="tab_contents">
+            <div id="tab_content1" class="tab">
+                <p><strong>Click this tab again to close the content pane.</strong></p>
+                <p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>
+            </div>
+            <div id="tab_content2" class="tab">
+                <p><strong>Click this tab again to close the content pane.</strong></p>
+                <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+            </div>
+            <div id="tab_content3" class="tab">
+                <p><strong>Click this tab again to close the content pane.</strong></p>
+                <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+            </div>
+        </div>
+    </div>
+    <script src="js/tab_toggle.js"></script>
+    <script>
+    $(document).ready(function() {
+        // 5. 인스턴스 만들기
+        var tab1 = new TabMenu('.tab_king');
+        // var tab2 = new TabMenu('.tab_menu2');    
+
+    });
+    </script>
+</body>
+
+</html>

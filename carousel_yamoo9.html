@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>carousel</title>
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul,
+  li {
+    list-style: none;
+  }
+
+  .carousel {
+    width: 100%;
+    background-color: #333;
+    position: relative;
+  }
+
+  .carousel_container {
+    width: 88%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 22%;
+  }
+
+  .carousel_content {
+    display: flex;
+    width: 100%;
+    position: absolute;
+    /*   transition: all .5s ease ;*/
+  }
+
+  .carousel_content li {
+    flex: 1 1 0;
+    min-width: 25%;
+    padding-bottom: 25%;
+  }
+  /*  .carousel_content li:hover div {
+        opacity: 1;
+    }*/
+
+  .carousel_content li.box1 {
+    background-color: pink;
+  }
+
+  .carousel_content li.box2 {
+    background-color: lightblue;
+  }
+
+  .carousel_content li.box3 {
+    background-color: gold;
+  }
+
+  .carousel_content li.box4 {
+    background-color: red;
+  }
+
+  .carousel_content li.box5 {
+    background-color: #eee;
+  }
+
+  .carousel_content li.box6 {
+    background-color: blue;
+  }
+
+  .carousel_content div {
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    padding-bottom: 100%;
+  }
+
+  .carousel_content div span {
+    font-size: 50px;
+  }
+
+  .carousel_content div a {
+    color: #fff;
+  }
+
+  .button_group button {
+    width: 6%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    height: 100%;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 30px;
+  }
+
+  .prev {
+    left: 0;
+  }
+
+  .next {
+    right: 0;
+  }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+</head>
+
+<body>
+  <div class="carousel">
+    <div class="carousel_container">
+      <ul class="carousel_content">
+        <li class='box1'>
+          <div>
+            <h4><a href="">download photo</a></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            <span>1</span>
+          </div>
+        </li>
+        <li class='box2'>
+          <div>
+            <h4><a href="">download photo</a></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            <span>2</span>
+          </div>
+        </li>
+        <li class='box3'>
+          <div>
+            <h4><a href="">download photo</a></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            <span>3</span>
+          </div>
+        </li>
+        <li class='box4'>
+          <div>
+            <h4><a href="">download photo</a></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            <span>4</span>
+          </div>
+        </li>
+        <li class='box5'>
+          <div>
+            <h4><a href="">download photo</a></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            <span>5</span>
+          </div>
+        </li>
+        <li class='box6'>
+          <div>
+            <h4><a href="">download photo</a></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            <span>6</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="button_group">
+      <button class="prev">
+        < </button>
+          <button class="next"> > </button>
+    </div>
+  </div>
+  <script>
+  (function(global, $) {
+
+    "use strict";
+    // 모듈 내에서 사용할 공통 변수
+
+    /** @type {jQuery Object} 캐러셀 jQuery 인스턴스 객체 */
+    var $carousel;
+    /** @type {jQuery Object} 캐러셀 콘텐츠 jQuery 인스턴스 객체 */
+    var $carousel_content;
+    /** @type {Number} 캐러셀 콘텐츠 아이템 개수 */
+    var carousel_total_num;
+    /** @type {Number} 캐러셀 콘텐츠 아이템 가로 폭 */
+    var each_width;
+    /** @type {Boolean} 애니메이션 진행 or 정지 상태 */
+    var animating = false;
+    /** @type {Number} 애니메이션 지속시간(ms) */
+    var duration = 200;
+    /**
+     *  애니메이션 이징(Easing)
+     *  참고 URL: http://easings.net/ko
+     *  @type  {String}
+     */
+    var easing = 'swing';
+
+    // 문서가 준비되면 init() 함수 실행
+    $(document).ready(init);
+
+    /** @function Initialization 캐러셀 초기화 */
+    function init() {
+      $carousel          = $('.carousel');
+      $carousel_content  = $carousel.find('.carousel_content');
+      carousel_total_num = $carousel_content.children().length;
+      each_width         = $carousel_content.children().outerWidth();
+      // Event Handler Binding
+      bindEvent();
+    }
+
+    /** @function Event Binding 버튼 요소에 이벤트 핸들러 연결 */
+    function bindEvent() {
+      var $buttons = $carousel.find('button');
+      $.each($buttons, function(idx) {
+        var $button = $buttons.eq(idx);
+        $button.on('click', $.proxy(moveCarousel, $button));
+      });
+      // $.proxy를 쓰는 이유
+      // 제이쿼리 객체 $button를 함수의 context로 넘겨줌
+      // 안쓰면, DOM <button>으로 context 바뀜
+      // $() 팩토리 함수를 다시 쓰지 않아도 됨
+    }
+
+    /** @function Moving Carousel 캐러셀 이동 방향 설정 */
+    function moveCarousel() {
+      this.hasClass('prev') ? moveCarouselContent('prev') : moveCarouselContent('next');
+    }
+
+    /**
+     *  @function Moving Carousel Content 캐러셀 콘텐츠 이동
+     *  @param    {String}  direction
+     */
+    function moveCarouselContent(direction) {
+      /** @type {Function} 애니메이션 종료되면 처리될 함수 */
+      var callback = null;
+      /** @type {jQuery Object} 버튼 클릭에 따라 이동시켜야 할 jQuery 인스턴스 객체 */
+      var $target = null;
+
+      /** 애니메이션 `진행` 상태이면 함수 종료 */
+      if (animating) {
+        console.info('애니메이션 중입니다.');
+        return;
+      }
+
+      // 애니메이션 `진행` 상태로 변경
+      animating = true;
+      // `prev` button 클릭
+      if (direction === 'prev') {
+        direction = '+=';
+        $carousel_content.css('left', -1 * each_width);
+        // 마지막 캐러셀 아이템 요소를 찾아 첫번째 캐러셀 아이템으로 이동
+        $target = $carousel_content.children('li').last();
+        $carousel_content.prepend($target);
+      }
+      // `next` button 클릭
+      else {
+        direction = '-=';
+        callback = function() {
+          $carousel_content.css('left', 0);
+          // 첫번째 캐러셀 아이템 요소를 찾아 마지막 캐러셀 아이템으로 이동
+          $target = $carousel_content.children('li').first();
+          $carousel_content.append($target);
+        }
+      }
+
+      $carousel_content.animate({
+        'left': direction + each_width
+      }, duration, easing, function() {
+        // callback이 존재할 경우, callback() 실행
+        callback && callback();
+        // 애니메이션 `종료` 상태로 변경
+        animating = false;
+      });
+    }
+
+  })(this, this.jQuery);
+  </script>
+</body>
+
+</html>

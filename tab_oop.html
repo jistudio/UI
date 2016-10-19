@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tab </title>
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .tab_wrapper {
+        position: relative;
+        height: 50vh;
+    }
+    
+    .tab_menu {
+        width: 100%;
+        height: 50vh;
+        background: pink;
+        position: absolute;
+        z-index: 10;
+    }
+    
+    .tab_menu ul {
+        width: 88%;
+        margin: 0 auto;
+        overflow: hidden;
+        position: absolute;
+        bottom: 0;
+    }
+    
+    .tab_menu li {
+        display: inline-block;
+        padding-right: 20px;
+    }
+    
+    .tab_menu li a:hover,
+    .tab_menu li a.change_icon {
+        color: red;
+    }
+    
+    .tab_contents {
+        position: absolute;
+        bottom: 0;
+    }
+    
+    #tab_content1 {
+        display: none;
+        background: #eee;
+        padding: 50px 0;
+    }
+    
+    #tab_content2 {
+        display: none;
+        background: green;
+        padding: 50px 0;
+    }
+    
+    #tab_content3 {
+        display: none;
+        background: blue;
+        padding: 50px 0;
+    }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="tab_wrapper">
+        <div class="tab_menu">
+            <ul>
+                <li><a href="#tab_content1">Nunc tincidunt</a></li>
+                <li><a href="#tab_content2">Proin dolor</a></li>
+                <li><a href="#tab_content3">Aenean lacinia</a></li>
+            </ul>
+        </div>
+        <div class="tab_contents">
+            <div id="tab_content1" class="tab">
+                <p><strong>Click this tab again to close the content pane.</strong></p>
+                <p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>
+            </div>
+            <div id="tab_content2" class="tab">
+                <p><strong>Click this tab again to close the content pane.</strong></p>
+                <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+            </div>
+            <div id="tab_content3" class="tab">
+                <p><strong>Click this tab again to close the content pane.</strong></p>
+                <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+            </div>
+        </div>
+    </div>
+    <script>
+    (function(global, $) {
+        "use strict";
+
+        $(document).ready(function() {
+            // 5. 인스턴스 만들기
+            var tab1 = new TabMenu();
+
+            // 6. 객체 외부에서 프로퍼티와 매서드 사용하기
+            tab1.init();
+
+        });
+
+        // 1. 객체 만들기
+        // 2. 변수 => 프로퍼티로 만들기 (this)
+        function TabMenu() {
+            this.$tab_menu = $('.tab_menu');
+            this.$tab_links = this.$tab_menu.find('a');
+            this.$tabs = $('.tab');
+            this.class_name = 'change_icon';
+            this.is_open = false;
+            this.anim_speed = 300;
+        }
+        // 3. 함수 => 매서드 만들기
+        // 4. 객체 내부에서 프로퍼티와 매서드 사용하기 (this)
+        TabMenu.prototype.init = function() {
+            var that = this; // 객체를 that에 참조
+            var $tab_links = that.$tab_links;
+            $.each($tab_links, function(idx) {
+
+                that.$tab_link = $tab_links.eq(idx);
+                that.$tab_link.on('click', $.proxy(that.settingTabmenu, that.$tab_link));
+            });
+        }
+        TabMenu.prototype.settingTabmenu = function() {
+            // var $this = this;
+            console.log(this);
+            $.proxy(this.changeTabIcon, $this)();
+            $.proxy(this.toggleTabMenu, $this)();
+
+        }
+        TabMenu.prototype.changeTabIcon = function() {
+            var $this = this;
+            if ($this.hasClass(this.class_name)) {
+                $this.removeClass(this.class_name);
+            } else {
+                this.$tab_links.filter('.' + this.class_name).removeClass(this.class_name);
+                $this.addClass(this.class_name);
+            }
+        }
+        TabMenu.prototype.toggleTabMenu = function() {
+            var $this = this;
+            this.$selectedContent = $($this.attr('href'));
+            // $( "#tab_content1" )
+            if (this.is_open) { // tab 열린상태
+                this.$selectedContent.hasClass('active') ?
+                    this.closeTab() :
+                    this.openTab(this.$selectedContent, true);
+            }
+            // tab 이 닫힌 상태
+            else {
+                this.openTab(this.$selectedContent);
+            }
+        }
+        TabMenu.prototype.openTab = function() {
+            if (!is_opened) {
+                this.is_open = true;
+                this.$tab_menu.animate({
+                    'height': '50%'
+                }, anim_speed);
+            }
+            // 초기화
+            this.$tabs.hide().removeClass('active');
+            this.$content.show().addClass('active');
+        }
+        TabMenu.prototype.closeTab = function() {
+            this.is_open = false;
+            this.$tab_menu.animate({
+                'height': '100%'
+            }, anim_speed);
+        }
+
+    })(this, this.jQuery);
+    </script>
+</body>
+
+</html>
